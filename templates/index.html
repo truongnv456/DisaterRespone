@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Disaster Response Model</title>
+</head>
+<body>
+    <h1>Predict Disaster Response</h1>
+    <form action="/predict" method="post">
+        <textarea name="message" rows="4" cols="50" placeholder="Enter your message here..."></textarea><br>
+        <input type="submit" value="Predict">
+    </form>
+    {% if prediction %}
+        <h2>Prediction:</h2>
+        <ul>
+            {% for category, value in prediction.items() %}
+                <li>{{ category }}: {{ value }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+</body>
+</html>
