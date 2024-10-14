@@ -31,6 +31,7 @@ Then go to http://127.0.0.1:5000/
 ## References
 
 - [[Figure Eight]](https://www.appen.com/): About Disater Response dataset to train.
+- [[Udacity]](https://www.udacity.com): About learning this lesson.
 
 ## Screen shoots
 1. Home page: you can enter the message in here
