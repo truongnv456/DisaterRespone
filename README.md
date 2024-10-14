@@ -34,5 +34,15 @@ Then go to http://127.0.0.1:5000/
 
 ## Screen shoots
 1. Home page: you can enter the message in here
-![HomePage](screenshot/home.png)
+
+![HomePage](screenshoot/home.png)
+
+2. Enter message and click 'Predict' button
+
+![Predict](screenshoot/message.png)
+
+3. After you click, you can see the message is in categories, which message is classify to
+
+![After](screenshoot/classify.png)
+
 
