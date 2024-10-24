@@ -8,7 +8,7 @@ import os
 app = Flask(__name__)
 
 # Install model has been trained
-model_path = os.path.join(os.path.dirname(__file__), 'model', 'pipeline.pkl')
+model_path = os.path.join(os.path.dirname(__file__), 'model', 'pipeline_new.pkl')
 with open(model_path, 'rb') as model_file:
     model = pickle.load(model_file)
 
