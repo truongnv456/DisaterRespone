@@ -14,6 +14,14 @@ The project uses data provided in [[Figure Eight]](https://www.appen.com/) and b
     cd DiasterResponse
     pip install -r requirement.txt
 ### 3. Usage
+First, run the ETL script:
+
+    python process_data.py
+
+Then, run the MLP to build pkl file:
+
+    python train_classifier.py
+
 To start the application, run:
 
     python run.py
