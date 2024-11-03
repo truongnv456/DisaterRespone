@@ -17,12 +17,12 @@ The project uses data provided in [[Figure Eight]](https://www.appen.com/) and b
 First, run the ETL script:
 
     # To create a processed sqlite db
-    python process_data.py
+    python process_data.py messages.csv categories.csv InsertDatabaseName.db
 
 Then, run the MLP to build pkl file:
 
     # To train and save a pkl model
-    python train_classifier.py
+    python train_classifier.py InsertDatabaseName.db model/pipeline.pkl
 
 To start the application, run:
 
@@ -45,6 +45,10 @@ Then go to http://127.0.0.1:5000/
 - [[Udacity]](https://www.udacity.com): About learning this lesson.
 
 ## Screen shoots
+
+Over view of dataset:
+![Dataset](screenshoot/newplot.png)
+
 1. Home page: you can enter the message in here
 
 ![HomePage](screenshoot/home.png)
@@ -55,6 +59,6 @@ Then go to http://127.0.0.1:5000/
 
 3. After you click, you can see the message is in categories, which message is classify to
 
-![After](screenshoot/classify.png)
+![After](screenshoot/result.png)
 
 
