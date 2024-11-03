@@ -4,6 +4,8 @@ import plotly.express as px
 import pickle
 import os
 import numpy as np
+from sympy import im
+from train_classifier import tokenize
 from sqlalchemy import create_engine
 
 app = Flask(__name__)
@@ -19,7 +21,7 @@ categories = [
 ]
 
 # Load the trained model
-model_path = os.path.join(os.path.dirname(__file__), 'model', 'pipeline_new.pkl')
+model_path = os.path.join(os.path.dirname(__file__), 'model', 'pipeline.pkl')
 with open(model_path, 'rb') as model_file:
     model = pickle.load(model_file)
 
@@ -70,7 +72,8 @@ def predict():
     return render_template('index.html', 
                            training_overview_graph=training_overview_html,
                            prediction=prediction_dict,
-                           categories=categories)
+                           categories=categories,
+                           message=message)
 
 if __name__ == '__main__':
     app.run(debug=True)
