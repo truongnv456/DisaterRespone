@@ -16,14 +16,17 @@ The project uses data provided in [[Figure Eight]](https://www.appen.com/) and b
 ### 3. Usage
 First, run the ETL script:
 
+    # To create a processed sqlite db
     python process_data.py
 
 Then, run the MLP to build pkl file:
 
+    # To train and save a pkl model
     python train_classifier.py
 
 To start the application, run:
 
+    # To deploy the application locally
     python run.py
 
 Then go to http://127.0.0.1:5000/
