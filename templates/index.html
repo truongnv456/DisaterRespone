@@ -2,26 +2,51 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Disaster Response Model</title>
+    <title>Disaster Response Project</title>
+    <style>
+        .highlight {
+            background-color: lightgreen; 
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
 </head>
 <body>
-    <h1>Predict Disaster Response</h1>
-    <form action="/predict" method="post">
-        <textarea name="message" rows="4" cols="50" placeholder="Enter your message here..."></textarea><br>
-        <input type="submit" value="Predict">
+    <h1>Disaster Response Pipeline</h1>
+    <form action="/predict" method="POST">
+        <textarea name="message" placeholder="Enter your message to classify...">{{ message }}</textarea>
+        <button type="submit">Classify Message</button>
     </form>
-    {% if prediction %}
-        <h2>Prediction:</h2>
-        <ul>
-            {% for category, value in prediction.items() %}
-                <li>{{ category }}: {{ value }}</li>
+
+    <h2>Overview of training dataset</h2>
+    <div>{{ training_overview_graph|safe }}</div>
+
+    <h2>Categories</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Category</th>
+                <th>Prediction</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for category in categories %}
+                <tr class="{% if prediction and prediction[category] > 0 %}highlight{% endif %}">
+                    <td>{{ category }}</td>
+                    <td>{% if prediction and prediction[category] > 0 %}Yes{% else %}No{% endif %}</td>
+                </tr>
             {% endfor %}
-        </ul>
-    {% endif %}
-    <div>
-        <h2>Data Visualization:</h2>
-        {{ graph|safe }}
-    </div>
+        </tbody>
+    </table>
 </body>
 </html>

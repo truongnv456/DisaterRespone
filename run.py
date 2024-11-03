@@ -1,18 +1,14 @@
 from flask import Flask, request, render_template
+import pandas as pd
 import plotly.express as px
 import pickle
-import numpy as np
-import pandas as pd
 import os
+import numpy as np
+from sqlalchemy import create_engine
 
 app = Flask(__name__)
 
-# Install model has been trained
-model_path = os.path.join(os.path.dirname(__file__), 'model', 'pipeline_new.pkl')
-with open(model_path, 'rb') as model_file:
-    model = pickle.load(model_file)
-
-# Define categories class
+# Define categories
 categories = [
     'related', 'request', 'offer', 'aid_related', 'medical_help', 'medical_products',
     'search_and_rescue', 'security', 'military', 'child_alone', 'water', 'food', 'shelter',
@@ -22,38 +18,59 @@ categories = [
     'other_weather', 'direct_report'
 ]
 
-# Function to create a plot from prediction data
-def create_plot(prediction_dict):
-    # Convert prediction data to a DataFrame
-    df = pd.DataFrame(list(prediction_dict.items()), columns=['Category', 'Count'])
-    
-    # Create a bar chart
-    fig = px.bar(df, x='Category', y='Count', title='Prediction Results')
-    return fig.to_html(full_html=False)
+# Load the trained model
+model_path = os.path.join(os.path.dirname(__file__), 'model', 'pipeline_new.pkl')
+with open(model_path, 'rb') as model_file:
+    model = pickle.load(model_file)
+
+# Load training data from SQLite database
+def load_training_data(database_filepath):
+    """Load training data from SQLite database."""
+    engine = create_engine(f'sqlite:///{database_filepath}')
+    df = pd.read_sql_table('DisasterResponse', engine)
+    return df
+
+# Create a plot for the overview of the training dataset
+def create_training_overview_plot(training_data):
+    category_counts = training_data.iloc[:, 4:].sum().sort_values(ascending=False)
+    df_overview = pd.DataFrame(category_counts).reset_index()
+    df_overview.columns = ['Category', 'Count']
+    fig_overview = px.bar(df_overview, x='Category', y='Count', title='Overview of Training Dataset')
+    return fig_overview.to_html(full_html=False)
 
 @app.route('/')
 def home():
-    return render_template('index.html')
+    # Load training data
+    training_data = load_training_data('InsertDatabaseName.db')  # Path to your database
+
+    # Create visualization
+    training_overview_html = create_training_overview_plot(training_data)
+
+    return render_template('index.html', training_overview_graph=training_overview_html, categories=categories)
 
 @app.route('/predict', methods=['POST'])
 def predict():
-    # Receive data from form
+    # Get data from the form
     message = request.form['message']
     
-    # Prediction
+    # Make prediction
     prediction = model.predict([message])
     
-    # Check type of prediction
+    # Check the type of prediction
     if isinstance(prediction, np.ndarray):
         prediction = prediction.flatten() 
 
-    # Create dictionnary
+    # Create a prediction dictionary
     prediction_dict = {category: int(pred) for category, pred in zip(categories, prediction.tolist())}
 
-    # Create a plot from prediction data
-    graph_html = create_plot(prediction_dict)
+    # Load training data again to create the overview plot
+    training_data = load_training_data('InsertDatabaseName.db')  # Path to your database
+    training_overview_html = create_training_overview_plot(training_data)
 
-    return render_template('index.html', prediction=prediction_dict, graph=graph_html)
+    return render_template('index.html', 
+                           training_overview_graph=training_overview_html,
+                           prediction=prediction_dict,
+                           categories=categories)
 
 if __name__ == '__main__':
     app.run(debug=True)
